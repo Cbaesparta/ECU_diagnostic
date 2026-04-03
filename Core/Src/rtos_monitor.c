@@ -34,7 +34,7 @@ void RTOS_Monitor_Init(void)
  * ==================================================================== */
 void RTOS_Monitor_Update(void)
 {
-    RTOS_Health_t snap;
+    RTOS_Health_t snap = {0};
 
     snap.free_heap_bytes     = xPortGetFreeHeapSize();
     snap.min_ever_heap_bytes = xPortGetMinimumEverFreeHeapSize();
@@ -89,4 +89,15 @@ void RTOS_Monitor_Update(void)
 const RTOS_Health_t *RTOS_Monitor_GetData(void)
 {
     return &g_health;
+}
+
+/* ======================================================================
+ * RTOS_Monitor_GetSnapshot — copies the current health data under mutex.
+ * Use this from any task that must read a consistent snapshot.
+ * ==================================================================== */
+void RTOS_Monitor_GetSnapshot(RTOS_Health_t *dst)
+{
+    xSemaphoreTake(g_mutex, portMAX_DELAY);
+    *dst = g_health;
+    xSemaphoreGive(g_mutex);
 }

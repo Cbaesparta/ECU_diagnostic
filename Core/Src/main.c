@@ -23,6 +23,7 @@
 CAN_HandleTypeDef  hcan1;
 UART_HandleTypeDef huart2;
 TIM_HandleTypeDef  htim5;
+TIM_HandleTypeDef  htim6;   /* HAL timebase — TIM6 replaces SysTick (used by FreeRTOS) */
 DMA_HandleTypeDef  hdma_usart2_rx;
 
 /* ---- Forward declarations -------------------------------------------- */
@@ -163,7 +164,7 @@ static void MX_DMA_Init(void)
     hdma_usart2_rx.Init.Priority            = DMA_PRIORITY_LOW;
     hdma_usart2_rx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK) { Error_Handler(); }
-    __HAL_LINKDMA(&huart2, hdmarx, hdma_usart2_rx);
+    /* DMA↔UART linkage is performed in HAL_UART_MspInit (called by HAL_UART_Init) */
 
     HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
@@ -185,6 +186,67 @@ static void MX_GPIO_Init(void)
 
     /* LEDs off at startup */
     HAL_GPIO_WritePin(GPIOG, LD3_Pin | LD4_Pin, GPIO_PIN_RESET);
+}
+
+/* ======================================================================
+ * HAL timebase: TIM6 at 1 ms.
+ *
+ * FreeRTOS owns SysTick, so the HAL tick is driven by TIM6 instead.
+ * These three functions override the __weak defaults in the STM32 HAL.
+ * HAL_InitTick is called by HAL_Init() and again by HAL_RCC_ClockConfig()
+ * after the PLL is configured, so the prescaler always matches the actual
+ * APB1 frequency at the time of the call.
+ * ==================================================================== */
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+{
+    RCC_ClkInitTypeDef clk     = {0};
+    uint32_t           pFLatency;
+    uint32_t           uwTimclock;
+    uint32_t           uwPrescalerValue;
+
+    /* Enable TIM6 clock */
+    __HAL_RCC_TIM6_CLK_ENABLE();
+
+    /* TIM6 is on APB1; its timer clock is 2 × APB1 */
+    HAL_RCC_GetClockConfig(&clk, &pFLatency);
+    uwTimclock = 2U * HAL_RCC_GetPCLK1Freq();
+
+    /* Prescaler divides down to 1 MHz so Period = 999 gives exactly 1 ms */
+    uwPrescalerValue = (uwTimclock / 1000000U) - 1U;
+
+    htim6.Instance               = TIM6;
+    htim6.Init.Period            = (1000000U / 1000U) - 1U;  /* 999 → 1 ms */
+    htim6.Init.Prescaler         = uwPrescalerValue;
+    htim6.Init.ClockDivision     = 0U;
+    htim6.Init.CounterMode       = TIM_COUNTERMODE_UP;
+    htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+    if (HAL_TIM_Base_Init(&htim6) != HAL_OK) { return HAL_ERROR; }
+
+    /* Set and enable the TIM6 update interrupt */
+    HAL_NVIC_SetPriority(TIM6_DAC_IRQn, TickPriority, 0U);
+    HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
+
+    return HAL_TIM_Base_Start_IT(&htim6);
+}
+
+void HAL_SuspendTick(void)
+{
+    __HAL_TIM_DISABLE_IT(&htim6, TIM_IT_UPDATE);
+}
+
+void HAL_ResumeTick(void)
+{
+    __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
+}
+
+/* Called by HAL_TIM_IRQHandler (from TIM6_DAC_IRQHandler) every 1 ms */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM6)
+    {
+        HAL_IncTick();
+    }
 }
 
 /* ======================================================================

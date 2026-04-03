@@ -39,8 +39,15 @@ void UART_Bridge_SendDiagnostics(void)
 {
     if (g_huart == NULL) { return; }
 
-    const CAN_DiagData_t  *c = CAN_Diagnostic_GetData();
-    const RTOS_Health_t   *r = RTOS_Monitor_GetData();
+    /* Take mutex-protected snapshots so we read consistent data even if
+     * CAN_DiagTask or RTOS_MonitorTask is updating concurrently. */
+    CAN_DiagData_t can_snap;
+    RTOS_Health_t  rtos_snap;
+    CAN_Diagnostic_GetSnapshot(&can_snap);
+    RTOS_Monitor_GetSnapshot(&rtos_snap);
+
+    const CAN_DiagData_t  *c = &can_snap;
+    const RTOS_Health_t   *r = &rtos_snap;
 
     /* ---- Watermark array -------------------------------------------- */
     /* Pre-format the watermark JSON array so snprintf stays readable */
@@ -115,6 +122,11 @@ void UART_Bridge_SendDiagnostics(void)
 
     if (len <= 0 || len >= (int)sizeof(g_tx_buf)) { return; }
 
-    /* Transmit; 100 ms timeout — sufficient for 240 bytes @ 115200 baud */
-    HAL_UART_Transmit(g_huart, (uint8_t *)g_tx_buf, (uint16_t)len, 100U);
+    /* Blocking TX; 100 ms timeout is sufficient for ~240 bytes @ 115200 baud.
+     * Capture the return value: a non-OK result (HAL_BUSY, HAL_TIMEOUT, or
+     * HAL_ERROR) means this cycle's packet was lost.  The next 500 ms cycle
+     * will retry automatically — no special recovery is needed here. */
+    HAL_StatusTypeDef tx_status =
+        HAL_UART_Transmit(g_huart, (uint8_t *)g_tx_buf, (uint16_t)len, 100U);
+    (void)tx_status;
 }
