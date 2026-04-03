@@ -1,0 +1,64 @@
+Configuration	ECU_diagnostic
+STM32CubeMX 	6.12.0
+Date	04/02/2026
+MCU	STM32F429ZITx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+CAN1	Activated	CAN1_RX	PA11
+CAN1	Activated	CAN1_TX	PA12
+SYS	TIM6	SYS_VS_tim6	VP_SYS_VS_tim6
+TIM5	Internal Clock	TIM5_VS_ClockSourceINT	VP_TIM5_VS_ClockSourceINT
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+36	PA2	USART2_TX	
+37	PA3	USART2_RX	
+103	PA11	CAN1_RX	
+104	PA12	CAN1_TX	
+PERIPHERALS	MODES	FUNCTIONS	PINS
+CAN1	Activated	CAN1_RX	PA11
+CAN1	Activated	CAN1_TX	PA12
+SYS	TIM6	SYS_VS_tim6	VP_SYS_VS_tim6
+TIM5	Internal Clock	TIM5_VS_ClockSourceINT	VP_TIM5_VS_ClockSourceINT
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+36	PA2	USART2_TX	
+37	PA3	USART2_RX	
+103	PA11	CAN1_RX	
+104	PA12	CAN1_TX	
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : ECU_diagnostic
+Project Folder : C:\Users\saisa\OneDrive\Documents\ECU_diagnostic
+Toolchain / IDE : STM32CubeIDE
+Firmware Package Name and Version : STM32Cube FW_F4 V1.28.3
+
+
+Code Generation Settings : 
+STM32Cube MCU packages and embedded software packs : Copy only the necessary library files
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
