@@ -1,4 +1,4 @@
-/* test_uart_bridge.c — Unit tests for Core/Src/uart_bridge.c
+/* test_uart_bridge.c -- Unit tests for Core/Src/uart_bridge.c
  *
  * UART_Bridge_SendDiagnostics() formats all live CAN and RTOS data as a
  * JSON line and transmits it.  These tests verify:

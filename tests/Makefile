@@ -1,4 +1,4 @@
-# Makefile — Build and run host-based unit tests for ECU_diagnostic
+# Makefile -- Build and run host-based unit tests for ECU_diagnostic
 #
 # Run from the repository root:
 #   make -f tests/Makefile test

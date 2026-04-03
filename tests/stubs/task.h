@@ -1,4 +1,4 @@
-/* task.h — Host-build stub for FreeRTOS task API. */
+/* task.h -- Host-build stub for FreeRTOS task API. */
 #ifndef TASK_H
 #define TASK_H
 

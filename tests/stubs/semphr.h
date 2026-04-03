@@ -1,4 +1,4 @@
-/* semphr.h — Host-build stub for FreeRTOS semaphore/mutex API. */
+/* semphr.h -- Host-build stub for FreeRTOS semaphore/mutex API. */
 #ifndef SEMPHR_H
 #define SEMPHR_H
 

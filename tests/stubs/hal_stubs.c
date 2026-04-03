@@ -1,4 +1,4 @@
-/* hal_stubs.c — Stub implementations for STM32 HAL functions.
+/* hal_stubs.c -- Stub implementations for STM32 HAL functions.
  * Provides controllable test doubles; state is inspectable via
  * the stub_* helper functions declared in stub_helpers.h.
  */
@@ -128,6 +128,6 @@ HAL_StatusTypeDef HAL_TIM_Base_Start(TIM_HandleTypeDef *htim)
 
 void Error_Handler(void)
 {
-    fprintf(stderr, "Error_Handler() called — test triggered an unexpected error path\n");
+    fprintf(stderr, "Error_Handler() called -- test triggered an unexpected error path\n");
     abort();
 }

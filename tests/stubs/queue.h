@@ -1,4 +1,4 @@
-/* queue.h — Host-build stub for FreeRTOS queue API. */
+/* queue.h -- Host-build stub for FreeRTOS queue API. */
 #ifndef QUEUE_H
 #define QUEUE_H
 

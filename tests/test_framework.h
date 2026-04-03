@@ -1,4 +1,4 @@
-/* test_framework.h — Minimal test runner for host-based C unit tests.
+/* test_framework.h -- Minimal test runner for host-based C unit tests.
  *
  * Usage:
  *   static void test_my_thing(void) {

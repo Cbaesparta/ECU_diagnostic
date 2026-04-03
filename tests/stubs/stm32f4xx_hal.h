@@ -1,4 +1,4 @@
-/* stm32f4xx_hal.h — Host-build stub replacing the STM32 HAL.
+/* stm32f4xx_hal.h -- Host-build stub replacing the STM32 HAL.
  * Provides only the types, macros, and function declarations used by
  * can_diagnostic.c, uart_bridge.c, and rtos_monitor.c.
  */
@@ -38,7 +38,7 @@ extern GPIO_TypeDef g_stub_GPIOG;
 
 /* ---- CAN peripheral register ------------------------------------------ */
 typedef struct {
-    uint32_t ESR;    /* Error Status Register — field tested in UpdateHealth */
+    uint32_t ESR;    /* Error Status Register -- field tested in UpdateHealth */
 } CAN_TypeDef;
 
 extern CAN_TypeDef g_stub_CAN1;
@@ -106,7 +106,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin,
 void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init);
 HAL_StatusTypeDef HAL_TIM_Base_Start(TIM_HandleTypeDef *htim);
 
-/* Peripheral handles defined in main.c — provided by hal_stubs.c */
+/* Peripheral handles defined in main.c -- provided by hal_stubs.c */
 extern CAN_HandleTypeDef  hcan1;
 extern UART_HandleTypeDef huart2;
 extern TIM_HandleTypeDef  htim5;

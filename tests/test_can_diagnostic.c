@@ -1,11 +1,11 @@
-/* test_can_diagnostic.c — Unit tests for Core/Src/can_diagnostic.c
+/* test_can_diagnostic.c -- Unit tests for Core/Src/can_diagnostic.c
  *
  * Covers:
- *   CAN_Diagnostic_Process  — frame decoding for all 5 PIDs
- *   CAN_Diagnostic_UpdateHealth — ESR parsing, frame-rate, bus timeout
+ *   CAN_Diagnostic_Process  -- frame decoding for all 5 PIDs
+ *   CAN_Diagnostic_UpdateHealth -- ESR parsing, frame-rate, bus timeout
  *   CAN_Diagnostic_ResetCounters
- *   HAL_CAN_RxFifo0MsgPendingCallback — ISR → queue path
- *   HAL_CAN_ErrorCallback             — error counter increment
+ *   HAL_CAN_RxFifo0MsgPendingCallback -- ISR → queue path
+ *   HAL_CAN_ErrorCallback             -- error counter increment
  */
 
 #include "test_framework.h"
@@ -41,7 +41,7 @@ static void inject_msg(uint32_t id, uint8_t dlc, const uint8_t data[])
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — RPM decoding
+ * CAN_Diagnostic_Process -- RPM decoding
  * ==================================================================== */
 
 static void test_rpm_zero(void)
@@ -90,7 +90,7 @@ static void test_rpm_big_endian_byte_order(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — Speed decoding
+ * CAN_Diagnostic_Process -- Speed decoding
  * ==================================================================== */
 
 static void test_speed_zero(void)
@@ -121,7 +121,7 @@ static void test_speed_max(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — Engine temperature decoding
+ * CAN_Diagnostic_Process -- Engine temperature decoding
  * Encoding: raw byte = actual_°C + 40  →  actual = byte - 40
  * ==================================================================== */
 
@@ -176,7 +176,7 @@ static void test_temp_ambient_20c(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — Battery decoding
+ * CAN_Diagnostic_Process -- Battery decoding
  * ==================================================================== */
 
 static void test_battery_12500mv(void)
@@ -209,7 +209,7 @@ static void test_battery_big_endian(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — Throttle decoding
+ * CAN_Diagnostic_Process -- Throttle decoding
  * ==================================================================== */
 
 static void test_throttle_zero(void)
@@ -240,7 +240,7 @@ static void test_throttle_mid(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — unknown / unhandled CAN IDs
+ * CAN_Diagnostic_Process -- unknown / unhandled CAN IDs
  * ==================================================================== */
 
 static void test_unknown_id_leaves_data_unchanged(void)
@@ -271,7 +271,7 @@ static void test_unknown_id_increments_frame_count(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_Process — frame counter and bus_timeout flag
+ * CAN_Diagnostic_Process -- frame counter and bus_timeout flag
  * ==================================================================== */
 
 static void test_frame_count_increments_per_message(void)
@@ -307,7 +307,7 @@ static void test_empty_queue_returns_immediately(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_UpdateHealth — ESR register parsing
+ * CAN_Diagnostic_UpdateHealth -- ESR register parsing
  * ESR layout: TEC[23:16], REC[31:24], BOFF[2], EPVF[1], LEC[6:4]
  * ==================================================================== */
 
@@ -376,7 +376,7 @@ static void test_health_all_esr_fields_zero(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_UpdateHealth — frame rate computation
+ * CAN_Diagnostic_UpdateHealth -- frame rate computation
  * frames_per_sec = (count * 1000) / elapsed_ms (once elapsed >= 1000 ms)
  * ==================================================================== */
 
@@ -404,7 +404,7 @@ static void test_frame_rate_not_updated_before_one_second(void)
         inject_msg(CAN_ID_SPEED, 1, d);
         CAN_Diagnostic_Process();
     }
-    /* Only 500 ms elapsed — window not closed yet */
+    /* Only 500 ms elapsed -- window not closed yet */
     stub_set_tick(500);
     CAN_Diagnostic_UpdateHealth();
     /* fps should remain 0 (not yet computed) */
@@ -431,7 +431,7 @@ static void test_frame_rate_resets_after_window(void)
 }
 
 /* ======================================================================
- * CAN_Diagnostic_UpdateHealth — bus silence timeout
+ * CAN_Diagnostic_UpdateHealth -- bus silence timeout
  * ==================================================================== */
 
 static void test_bus_timeout_not_set_with_no_frames(void)
@@ -484,7 +484,7 @@ static void test_bus_timeout_clears_on_new_frame(void)
     CAN_Diagnostic_UpdateHealth();
     TEST_ASSERT_EQ(1, (int)CAN_Diagnostic_GetData()->bus_timeout);
 
-    /* Receive new frame — bus_timeout should clear immediately */
+    /* Receive new frame -- bus_timeout should clear immediately */
     inject_msg(CAN_ID_SPEED, 1, d);
     CAN_Diagnostic_Process();
     TEST_ASSERT_EQ(0, (int)CAN_Diagnostic_GetData()->bus_timeout);
@@ -529,7 +529,7 @@ static void test_reset_counters_preserves_vehicle_data(void)
 }
 
 /* ======================================================================
- * HAL_CAN_RxFifo0MsgPendingCallback — ISR → queue → Process path
+ * HAL_CAN_RxFifo0MsgPendingCallback -- ISR → queue → Process path
  * ==================================================================== */
 
 static void test_isr_callback_enqueues_message(void)
@@ -541,7 +541,7 @@ static void test_isr_callback_enqueues_message(void)
     /* Trigger the ISR callback with a fake CAN handle */
     HAL_CAN_RxFifo0MsgPendingCallback(NULL);
 
-    /* The message is now in the queue — process it */
+    /* The message is now in the queue -- process it */
     CAN_Diagnostic_Process();
     TEST_ASSERT_EQ(5000, CAN_Diagnostic_GetData()->rpm);
 }
@@ -578,30 +578,30 @@ int main(void)
 {
     printf("=== test_can_diagnostic ===\n");
 
-    /* Frame decoding — RPM */
+    /* Frame decoding -- RPM */
     RUN_TEST(test_rpm_zero);
     RUN_TEST(test_rpm_max);
     RUN_TEST(test_rpm_typical);
     RUN_TEST(test_rpm_big_endian_byte_order);
 
-    /* Frame decoding — Speed */
+    /* Frame decoding -- Speed */
     RUN_TEST(test_speed_zero);
     RUN_TEST(test_speed_typical);
     RUN_TEST(test_speed_max);
 
-    /* Frame decoding — Engine temp */
+    /* Frame decoding -- Engine temp */
     RUN_TEST(test_temp_zero_celsius);
     RUN_TEST(test_temp_minus_40);
     RUN_TEST(test_temp_typical_warm);
     RUN_TEST(test_temp_negative_via_int8_cast);
     RUN_TEST(test_temp_ambient_20c);
 
-    /* Frame decoding — Battery */
+    /* Frame decoding -- Battery */
     RUN_TEST(test_battery_12500mv);
     RUN_TEST(test_battery_zero);
     RUN_TEST(test_battery_big_endian);
 
-    /* Frame decoding — Throttle */
+    /* Frame decoding -- Throttle */
     RUN_TEST(test_throttle_zero);
     RUN_TEST(test_throttle_full);
     RUN_TEST(test_throttle_mid);
@@ -613,7 +613,7 @@ int main(void)
     RUN_TEST(test_bus_timeout_cleared_after_frame);
     RUN_TEST(test_empty_queue_returns_immediately);
 
-    /* UpdateHealth — ESR */
+    /* UpdateHealth -- ESR */
     RUN_TEST(test_health_tec_extracted);
     RUN_TEST(test_health_rec_extracted);
     RUN_TEST(test_health_bus_off_flag);
@@ -622,12 +622,12 @@ int main(void)
     RUN_TEST(test_health_lec_extracted);
     RUN_TEST(test_health_all_esr_fields_zero);
 
-    /* UpdateHealth — frame rate */
+    /* UpdateHealth -- frame rate */
     RUN_TEST(test_frame_rate_computed_after_one_second);
     RUN_TEST(test_frame_rate_not_updated_before_one_second);
     RUN_TEST(test_frame_rate_resets_after_window);
 
-    /* UpdateHealth — bus timeout */
+    /* UpdateHealth -- bus timeout */
     RUN_TEST(test_bus_timeout_not_set_with_no_frames);
     RUN_TEST(test_bus_timeout_set_after_silence);
     RUN_TEST(test_bus_timeout_not_set_within_window);

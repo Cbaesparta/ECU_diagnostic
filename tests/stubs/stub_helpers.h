@@ -1,4 +1,4 @@
-/* stub_helpers.h — Declares test-helper functions exposed by the stubs.
+/* stub_helpers.h -- Declares test-helper functions exposed by the stubs.
  * Include this in test files to access injectable state.
  */
 #ifndef STUB_HELPERS_H

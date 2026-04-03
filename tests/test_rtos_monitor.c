@@ -1,9 +1,9 @@
-/* test_rtos_monitor.c — Unit tests for Core/Src/rtos_monitor.c
+/* test_rtos_monitor.c -- Unit tests for Core/Src/rtos_monitor.c
  *
  * Covers:
- *   RTOS_Monitor_Init   — zeroes all fields
- *   RTOS_Monitor_Update — populates heap sizes, uptime, task count, task info
- *   RTOS_Monitor_GetData — returns a valid non-NULL pointer
+ *   RTOS_Monitor_Init   -- zeroes all fields
+ *   RTOS_Monitor_Update -- populates heap sizes, uptime, task count, task info
+ *   RTOS_Monitor_GetData -- returns a valid non-NULL pointer
  *
  * Task handle scenarios:
  *   All handles non-NULL → 4 task entries populated
@@ -51,7 +51,7 @@ static void test_init_zeroes_heap_fields(void)
     RTOS_Monitor_Init();
     RTOS_Monitor_Update();
 
-    /* Now reinitialise — GetData should return the updated values from
+    /* Now reinitialise -- GetData should return the updated values from
      * the most recent Update; we verify Init alone zeroed the snapshot */
     RTOS_Monitor_Init();
     const RTOS_Health_t *h = RTOS_Monitor_GetData();
@@ -86,7 +86,7 @@ static void test_getdata_returns_non_null(void)
 }
 
 /* ======================================================================
- * RTOS_Monitor_Update — heap and uptime
+ * RTOS_Monitor_Update -- heap and uptime
  * ==================================================================== */
 
 static void test_update_captures_free_heap(void)
@@ -122,7 +122,7 @@ static void test_update_captures_task_count(void)
 }
 
 /* ======================================================================
- * RTOS_Monitor_Update — task info with all handles non-NULL
+ * RTOS_Monitor_Update -- task info with all handles non-NULL
  * ==================================================================== */
 
 static void test_update_all_four_task_names_populated(void)
@@ -167,7 +167,7 @@ static void test_update_unused_slots_are_zeroed(void)
 }
 
 /* ======================================================================
- * RTOS_Monitor_Update — task info with all handles NULL
+ * RTOS_Monitor_Update -- task info with all handles NULL
  * ==================================================================== */
 
 static void test_update_no_task_info_when_all_handles_null(void)
@@ -183,7 +183,7 @@ static void test_update_no_task_info_when_all_handles_null(void)
 }
 
 /* ======================================================================
- * RTOS_Monitor_Update — partial handles (only CAN_Rx non-NULL)
+ * RTOS_Monitor_Update -- partial handles (only CAN_Rx non-NULL)
  * ==================================================================== */
 
 static void test_update_only_one_task_when_one_handle_set(void)
@@ -216,7 +216,7 @@ static void test_update_two_tasks_when_two_handles_set(void)
 }
 
 /* ======================================================================
- * RTOS_Monitor_Update — data snapshot is stable across multiple updates
+ * RTOS_Monitor_Update -- data snapshot is stable across multiple updates
  * ==================================================================== */
 
 static void test_successive_updates_overwrite_with_latest_values(void)

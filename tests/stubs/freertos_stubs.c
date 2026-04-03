@@ -1,4 +1,4 @@
-/* freertos_stubs.c — Stub implementations for FreeRTOS kernel functions.
+/* freertos_stubs.c -- Stub implementations for FreeRTOS kernel functions.
  *
  * Queue stub:  a single fixed-size circular buffer (one active queue at a
  *              time, which matches the single CAN RX queue in production).
@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 /* ======================================================================
- * Task handles — normally defined in freertos.c; provided here so
+ * Task handles -- normally defined in freertos.c; provided here so
  * rtos_monitor.c can extern them.
  * ==================================================================== */
 TaskHandle_t hCAN_RxTask       = NULL;
@@ -34,7 +34,7 @@ void stub_set_task_handle_uart_tx(TaskHandle_t h)   { hUART_TxTask      = h; }
 void stub_set_task_handle_rtos_mon(TaskHandle_t h)  { hRTOS_MonitorTask = h; }
 
 /* ======================================================================
- * Queue stub — a circular buffer of fixed-size slots.
+ * Queue stub -- a circular buffer of fixed-size slots.
  * Item size is captured from xQueueCreate(); all items use that size.
  * ==================================================================== */
 #define STUB_QUEUE_SLOTS      32U
@@ -98,7 +98,7 @@ BaseType_t xQueueSendFromISR(QueueHandle_t xQueue,
 }
 
 /* ======================================================================
- * Semaphore / mutex stub — always succeeds; no locking.
+ * Semaphore / mutex stub -- always succeeds; no locking.
  * ==================================================================== */
 static int s_mutex_counter = 0;
 

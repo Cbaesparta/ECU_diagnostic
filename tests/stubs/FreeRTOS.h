@@ -1,4 +1,4 @@
-/* FreeRTOS.h — Host-build stub for the FreeRTOS kernel header.
+/* FreeRTOS.h -- Host-build stub for the FreeRTOS kernel header.
  * Defines essential types and macros without any platform-specific code.
  * Intentionally does NOT include FreeRTOSConfig.h (that file pulls in HAL).
  */
