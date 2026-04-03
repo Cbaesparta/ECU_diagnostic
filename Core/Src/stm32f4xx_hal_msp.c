@@ -111,10 +111,9 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
     }
     else if (htim->Instance == TIM6)
     {
-        /* TIM6 is the HAL timebase (SysTick replacement) */
+        /* TIM6 is the HAL timebase; only the clock is enabled here.
+         * NVIC priority and interrupt enable are set in HAL_InitTick(). */
         __HAL_RCC_TIM6_CLK_ENABLE();
-        HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 15, 0);
-        HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
     }
 }
 

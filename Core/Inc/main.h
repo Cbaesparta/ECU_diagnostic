@@ -11,6 +11,7 @@ extern "C" {
 extern CAN_HandleTypeDef  hcan1;
 extern UART_HandleTypeDef huart2;
 extern TIM_HandleTypeDef  htim5;
+extern TIM_HandleTypeDef  htim6;
 extern DMA_HandleTypeDef  hdma_usart2_rx;
 
 /* Discovery board LED pins (PG13 = LD3 green, PG14 = LD4 red) */

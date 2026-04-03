@@ -166,6 +166,18 @@ const CAN_DiagData_t *CAN_Diagnostic_GetData(void)
 }
 
 /* ======================================================================
+ * CAN_Diagnostic_GetSnapshot — copies the current data under mutex into *dst.
+ * Use this from any task that must read consistent data without holding a
+ * long-lived lock.
+ * ==================================================================== */
+void CAN_Diagnostic_GetSnapshot(CAN_DiagData_t *dst)
+{
+    xSemaphoreTake(g_data_mutex, portMAX_DELAY);
+    *dst = g_data;
+    xSemaphoreGive(g_data_mutex);
+}
+
+/* ======================================================================
  * CAN_Diagnostic_ResetCounters
  * ==================================================================== */
 void CAN_Diagnostic_ResetCounters(void)

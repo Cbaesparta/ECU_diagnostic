@@ -27,6 +27,7 @@ typedef struct {
 void              RTOS_Monitor_Init(void);
 void              RTOS_Monitor_Update(void);
 const RTOS_Health_t *RTOS_Monitor_GetData(void);
+void              RTOS_Monitor_GetSnapshot(RTOS_Health_t *dst); /* Mutex-protected copy */
 
 #ifdef __cplusplus
 }

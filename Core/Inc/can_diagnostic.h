@@ -56,6 +56,7 @@ void CAN_Diagnostic_Init(CAN_HandleTypeDef *hcan);
 void CAN_Diagnostic_Process(void);   /* Call from CAN_RxTask (blocks on queue) */
 void CAN_Diagnostic_UpdateHealth(void); /* Call periodically from CAN_DiagTask */
 const CAN_DiagData_t *CAN_Diagnostic_GetData(void);
+void CAN_Diagnostic_GetSnapshot(CAN_DiagData_t *dst); /* Mutex-protected copy */
 void CAN_Diagnostic_ResetCounters(void);
 
 /* ---- HAL callbacks (defined here, called by HAL) --------------------- */
